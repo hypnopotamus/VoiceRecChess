@@ -1,4 +1,4 @@
-package Pieces
+package pieces
 
 type Pawn struct {
 	Piece
