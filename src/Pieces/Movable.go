@@ -7,4 +7,7 @@ type Movable interface {
 	Move(newPosition Position) bool
 
 	CurrentPosition() Position
+
+	SetCaptured()
+	IsCaptured() bool
 }

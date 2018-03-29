@@ -8,11 +8,18 @@ import (
 type Board struct {
 	BlackPieces [16]pieces.Movable
 	WhitePieces [16]pieces.Movable
-	Spaces      [8][8]Space
+	Spaces      [8][8]pieces.Position
 }
 
 func InitializeBoard() Board {
 	var board Board
+
+	for rowIndex, rows := range board.Spaces {
+		for columnIndex, space := range rows {
+			space.Horizontal = rowIndex
+			space.Vertical = columnIndex
+		}
+	}
 
 	board.initialize(board.BlackPieces, board.Spaces[0], board.Spaces[1])
 	board.initialize(board.WhitePieces, board.Spaces[7], board.Spaces[6])
@@ -21,13 +28,13 @@ func InitializeBoard() Board {
 	return board
 }
 
-func (board Board) initialize(piecesArray [16]pieces.Movable, notPawnRow [8]Space, pawnRow [8]Space) {
+func (board Board) initialize(piecesArray [16]pieces.Movable, notPawnRow [8]pieces.Position, pawnRow [8]pieces.Position) {
 	var pieceIndex = 0
 
 	for _, space := range pawnRow {
 		var pawn pieces.Pawn
 
-		space.setOccupant(pawn.Piece)
+		space.SetOccupant(pawn.Piece.Movable)
 		piecesArray[pieceIndex] = pawn.Piece
 
 		pieceIndex++
@@ -36,7 +43,7 @@ func (board Board) initialize(piecesArray [16]pieces.Movable, notPawnRow [8]Spac
 	for index, space := range pawnRow {
 		var piece = makePieceForSpace(index)
 
-		space.setOccupant(piece)
+		space.SetOccupant(piece)
 		piecesArray[pieceIndex] = piece
 
 		pieceIndex++
@@ -90,4 +97,17 @@ func swapKingAndQueenPosition(pieceArray [16]pieces.Movable) {
 	queen.InitializePlacement(kingLocation)
 
 	return
+}
+
+func (board Board) RemoveCapturedPieces() {
+	removeCaptured(board.WhitePieces)
+	removeCaptured(board.BlackPieces)
+}
+
+func removeCaptured(pieceArray [16]pieces.Movable) {
+	for index, piece := range pieceArray {
+		if piece.IsCaptured() {
+			pieceArray[index] = nil
+		}
+	}
 }

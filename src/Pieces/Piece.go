@@ -3,18 +3,23 @@ package pieces
 type Piece struct {
 	Movable
 	Location *Position
+	Captured bool
 }
 
 func (piece Piece) InitializePlacement(initialPosition Position) {
 	piece.Location = &initialPosition
+	piece.Location.Occupant = &piece.Movable
 }
 
 func (piece Piece) Move(newPosition Position) bool {
 	if piece.IsMoveValid(newPosition) {
-		piece.Location.Occupied = false
-		//if newPosition.Occupied capture that piece
+		piece.Location.Occupant = nil
+		if newPosition.isOccupied() {
+			var occupant = *newPosition.Occupant
+			occupant.SetCaptured()
+		}
 		piece.Location = &newPosition
-		piece.Location.Occupied = true
+		piece.Location.Occupant = &piece.Movable
 
 		return true
 	}
@@ -39,4 +44,12 @@ func abs(n int) int {
 
 func (piece Piece) CurrentPosition() Position {
 	return *piece.Location
+}
+
+func (piece Piece) SetCaptured() {
+	piece.Captured = true
+}
+
+func (piece Piece) IsCaptured() bool {
+	return piece.Captured
 }

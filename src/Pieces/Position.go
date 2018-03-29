@@ -3,5 +3,14 @@ package pieces
 type Position struct {
 	Horizontal int
 	Vertical   int
-	Occupied   bool
+	Occupant   *Movable
+}
+
+func (position Position) SetOccupant(piece Movable) {
+	position.Occupant = &piece
+	piece.InitializePlacement(position)
+}
+
+func (position Position) isOccupied() bool {
+	return position.Occupant != nil
 }
