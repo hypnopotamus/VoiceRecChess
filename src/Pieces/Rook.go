@@ -4,6 +4,8 @@ type Rook struct {
 	Piece
 }
 
-func (this Rook) IsMoveValid(newPosition Position) bool {
-	return false
+func (rook Rook) IsMoveValid(newPosition Position) bool {
+	var horizontalDelta, verticalDelta = rook.LocationDelta(newPosition)
+
+	return (horizontalDelta != 0 && verticalDelta == 0) || (horizontalDelta == 0 && verticalDelta != 0)
 }

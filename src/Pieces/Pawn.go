@@ -4,6 +4,8 @@ type Pawn struct {
 	Piece
 }
 
-func (this Pawn) IsMoveValid(newPosition Position) bool {
-	return false
+func (pawn Pawn) IsMoveValid(newPosition Position) bool {
+	var horizontalDelta, verticalDelta = pawn.LocationDelta(newPosition)
+
+	return horizontalDelta == 0 || (newPosition.Occupied && horizontalDelta == 1 && verticalDelta == 1)
 }

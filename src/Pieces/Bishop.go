@@ -4,6 +4,8 @@ type Bishop struct {
 	Piece
 }
 
-func (this Bishop) IsMoveValid(newPosition Position) bool {
-	return false
+func (bishop Bishop) IsMoveValid(newPosition Position) bool {
+	var horizontalDelta, verticalDelta = bishop.LocationDelta(newPosition)
+
+	return horizontalDelta == verticalDelta
 }

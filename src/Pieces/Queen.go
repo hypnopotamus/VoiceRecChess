@@ -4,6 +4,9 @@ type Queen struct {
 	Piece
 }
 
-func (this Queen) IsMoveValid(newPosition Position) bool {
-	return false
+func (queen Queen) IsMoveValid(newPosition Position) bool {
+	bishop := Bishop{Piece: queen.Piece}
+	rook := Rook{Piece: queen.Piece}
+
+	return bishop.IsMoveValid(newPosition) || rook.IsMoveValid(newPosition)
 }
