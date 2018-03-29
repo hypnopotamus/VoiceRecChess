@@ -44,25 +44,6 @@ func main() {
 		panic(err)
 	}
 
-	go func() {
-		var input string
-		fmt.Scanln(&input)
-
-		stream.Stop()
-		waveWriter.Close()
-		stream.Close()
-		portaudio.Terminate()
-		os.Exit(0)
-	}()
-
-	defer func() {
-		stream.Stop()
-		waveWriter.Close()
-		stream.Close()
-		portaudio.Terminate()
-		os.Exit(0)
-	}()
-
 	stream.Start()
 	for {
 		stream.Read()
@@ -75,7 +56,11 @@ func main() {
 
 		select {
 		case <-sig:
-			return
+			stream.Stop()
+			waveWriter.Close()
+			stream.Close()
+			portaudio.Terminate()
+			os.Exit(0)
 		default:
 		}
 	}
