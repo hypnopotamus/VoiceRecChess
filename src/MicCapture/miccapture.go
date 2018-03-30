@@ -1,4 +1,4 @@
-package main
+package miccapture
 
 import (
 	"fmt"
