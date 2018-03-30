@@ -25,7 +25,7 @@ func main() {
 	inputChannels := 1
 	outputChannels := 0
 	sampleRate := 44100
-	framesPerBuffer := make([]byte, 64)
+	framesPerBuffer := make([]float32, 64)
 
 	portaudio.Initialize()
 
@@ -48,7 +48,20 @@ func main() {
 	for {
 		stream.Read()
 
-		_, err := waveWriter.Write([]byte(framesPerBuffer))
+		wavBuffer := make([]byte, len(framesPerBuffer))
+		for i, num := range framesPerBuffer {
+			val := num
+			if val < -1.0 {
+				val = -1.0
+			}
+			if val > 1.0 {
+				val = 1.0
+			}
+			var valInt = byte(((val + 1.0) * 127))
+			wavBuffer[i] = valInt
+		}
+
+		_, err := waveWriter.Write([]byte(wavBuffer))
 
 		if err != nil {
 			panic(err)
