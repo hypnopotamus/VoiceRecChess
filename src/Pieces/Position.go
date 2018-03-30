@@ -8,7 +8,6 @@ type Position struct {
 }
 
 func (position Position) SetOccupant(piece Movable) {
-	position.Occupant = &piece
 	piece.InitializePlacement(position)
 }
 

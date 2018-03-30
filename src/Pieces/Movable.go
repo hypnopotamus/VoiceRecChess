@@ -13,4 +13,6 @@ type Movable interface {
 
 	SetCaptured()
 	IsCaptured() bool
+
+	PieceType() string
 }

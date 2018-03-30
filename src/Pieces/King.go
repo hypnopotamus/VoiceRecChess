@@ -9,3 +9,7 @@ func (king King) IsMoveValid(newPosition Position) bool {
 
 	return horizontalDelta <= 1 && verticalDelta <= 1
 }
+
+func (king King) GetPieceType() string {
+	return "king"
+}

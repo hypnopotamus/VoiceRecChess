@@ -9,3 +9,7 @@ func (rook Rook) IsMoveValid(newPosition Position) bool {
 
 	return (horizontalDelta != 0 && verticalDelta == 0) || (horizontalDelta == 0 && verticalDelta != 0)
 }
+
+func (rook Rook) GetPieceType() string {
+	return "rook"
+}

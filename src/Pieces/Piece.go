@@ -2,13 +2,13 @@ package pieces
 
 type Piece struct {
 	Movable
-	Location *Position
+	Location Position
 	Color    Color
 	Captured bool
 }
 
 func (piece Piece) InitializePlacement(initialPosition Position) {
-	piece.Location = &initialPosition
+	piece.Location = initialPosition
 	piece.Location.Occupant = &piece.Movable
 }
 
@@ -19,7 +19,7 @@ func (piece Piece) Move(newPosition Position) bool {
 			var occupant = *newPosition.Occupant
 			occupant.SetCaptured()
 		}
-		piece.Location = &newPosition
+		piece.Location = newPosition
 		piece.Location.Occupant = &piece.Movable
 
 		return true
@@ -44,7 +44,7 @@ func abs(n int) int {
 }
 
 func (piece Piece) CurrentPosition() Position {
-	return *piece.Location
+	return piece.Location
 }
 
 func (piece Piece) SetCaptured() {
