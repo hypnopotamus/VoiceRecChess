@@ -1,15 +1,20 @@
-package main
+package lex
 
 import (
+	"strconv"
 	"unicode"
 )
 
-type BoardLocation struct {
+type LocationRequest struct {
 	Letter rune
 	Number int
 }
 
-func NewBoardLocation(letter rune, number int) *BoardLocation {
+func (lr LocationRequest) toString() string {
+	return string(lr.Letter) + strconv.Itoa(lr.Number)
+}
+
+func NewLocationRequest(letter rune, number int) *LocationRequest {
 	if number < 1 || number > 8 {
 		return nil
 	}
@@ -19,7 +24,7 @@ func NewBoardLocation(letter rune, number int) *BoardLocation {
 		return nil
 	}
 
-	bl := new(BoardLocation)
+	bl := new(LocationRequest)
 	bl.Letter = letter
 	bl.Number = number
 	return bl

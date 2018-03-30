@@ -1,23 +1,23 @@
-package main
-
-import (
-	"strconv"
-)
+package lex
 
 type MoveRequest struct {
-	Source      *BoardLocation
-	Destination *BoardLocation
+	Piece       string
+	Source      *LocationRequest
+	Destination *LocationRequest
 }
 
-func NewMoveRequest(source string, destination string) *MoveRequest {
+func NewMoveRequest(piece string, sourceLetter string, sourceNumber int,
+	destinationLetter string, destinationNumber int) *MoveRequest {
 	mr := new(MoveRequest)
 
-	sourceNumber, _ := strconv.Atoi(string(source[1]))
-	mr.Source = NewBoardLocation(rune(source[0]), sourceNumber)
-
-	destinationNumber, _ := strconv.Atoi(string(destination[1]))
-	mr.Destination = NewBoardLocation(rune(destination[0]), destinationNumber)
+	mr.Piece = piece
+	mr.Source = NewLocationRequest(rune(sourceLetter[0]), sourceNumber)
+	mr.Destination = NewLocationRequest(rune(destinationLetter[0]), destinationNumber)
 	return mr
+}
+
+func (mr MoveRequest) toString() string {
+	return mr.Piece + ":" + mr.Source.toString() + ":" + mr.Destination.toString()
 }
 
 // func main() {
