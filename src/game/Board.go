@@ -18,22 +18,24 @@ func InitializeBoard() Board {
 		for columnIndex, space := range rows {
 			space.Horizontal = rowIndex
 			space.Vertical = columnIndex
+			space.Color = pieces.ToColor(rowIndex + columnIndex)
 		}
 	}
 
-	board.initialize(board.BlackPieces, board.Spaces[0], board.Spaces[1])
-	board.initialize(board.WhitePieces, board.Spaces[7], board.Spaces[6])
+	board.initialize(board.BlackPieces, board.Spaces[0], board.Spaces[1], pieces.Black)
+	board.initialize(board.WhitePieces, board.Spaces[7], board.Spaces[6], pieces.White)
 	swapKingAndQueenPosition(board.BlackPieces)
 
 	return board
 }
 
-func (board Board) initialize(piecesArray [16]pieces.Movable, notPawnRow [8]pieces.Position, pawnRow [8]pieces.Position) {
+func (board Board) initialize(piecesArray [16]pieces.Movable, notPawnRow [8]pieces.Position, pawnRow [8]pieces.Position, color pieces.Color) {
 	var pieceIndex = 0
 
 	for _, space := range pawnRow {
 		var pawn pieces.Pawn
 
+		pawn.SetColor(color)
 		space.SetOccupant(pawn.Piece.Movable)
 		piecesArray[pieceIndex] = pawn.Piece
 
@@ -43,6 +45,7 @@ func (board Board) initialize(piecesArray [16]pieces.Movable, notPawnRow [8]piec
 	for index, space := range pawnRow {
 		var piece = makePieceForSpace(index)
 
+		piece.SetColor(color)
 		space.SetOccupant(piece)
 		piecesArray[pieceIndex] = piece
 

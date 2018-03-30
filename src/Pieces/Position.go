@@ -4,6 +4,7 @@ type Position struct {
 	Horizontal int
 	Vertical   int
 	Occupant   *Movable
+	Color      Color
 }
 
 func (position Position) SetOccupant(piece Movable) {

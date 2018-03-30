@@ -3,6 +3,7 @@ package pieces
 type Piece struct {
 	Movable
 	Location *Position
+	Color    Color
 	Captured bool
 }
 
@@ -52,4 +53,12 @@ func (piece Piece) SetCaptured() {
 
 func (piece Piece) IsCaptured() bool {
 	return piece.Captured
+}
+
+func (piece Piece) SetColor(color Color) {
+	piece.Color = color
+}
+
+func (piece Piece) GetColor() Color {
+	return piece.Color
 }
