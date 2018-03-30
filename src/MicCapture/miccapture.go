@@ -1,4 +1,4 @@
-package miccapture
+package main
 
 import (
 	"fmt"
@@ -11,13 +11,25 @@ import (
 )
 
 func main() {
-	recording := true
-	fmt.Println("starting test recording...")
-	go CaptureAudio(&recording)
-	time.Sleep(time.Duration(5) * time.Second)
-	fmt.Println("stopping test recording...")
-	recording = false
-	time.Sleep(time.Duration(100) * time.Millisecond)
+	var input string
+
+	sig := make(chan os.Signal, 1)
+	signal.Notify(sig, os.Interrupt, os.Kill)
+
+	for {
+		fmt.Println("Press enter to start recording (5 second limit), CTRL+C to quit")
+		fmt.Scanln(&input)
+		select {
+		case <-sig:
+			os.Exit(0)
+		default:
+		}
+		recording := true
+		go CaptureAudio(&recording)
+		time.Sleep(time.Duration(5) * time.Second)
+		recording = false
+		time.Sleep(time.Duration(100) * time.Millisecond)
+	}
 }
 
 /*
