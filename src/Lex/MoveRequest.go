@@ -16,7 +16,7 @@ func NewMoveRequest(piece string, sourceLetter string, sourceNumber int,
 	return mr
 }
 
-func (mr MoveRequest) toString() string {
+func (mr MoveRequest) ToString() string {
 	return mr.Piece + ":" + mr.Source.toString() + ":" + mr.Destination.toString()
 }
 

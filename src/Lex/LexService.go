@@ -3,6 +3,10 @@ package lex
 import (
 	"os"
 
+	"VoiceRecChess/src/miccapture"
+	"fmt"
+	"time"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/endpoints"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -10,8 +14,26 @@ import (
 )
 
 func main() {
-	moveIntent := processVoiceCommand("MovePawnD2toF2.pcm")
-	processIntentResponse(moveIntent)
+	recording := true
+	fmt.Println("starting test recording...")
+	go miccapture.CaptureAudio(&recording)
+	time.Sleep(time.Duration(6) * time.Second)
+	fmt.Println("stopping test recording...")
+	recording = false
+	time.Sleep(time.Duration(100) * time.Millisecond)
+
+	moveRequest := ProcessVoice("temp.wav")
+	fmt.Println(moveRequest.ToString())
+}
+
+/*
+ProcessVoice - takes in a filename for an audio file, sends it to Lex, and returns the
+move request from the speech in the audio file.
+*/
+func ProcessVoice(voiceFileName string) *MoveRequest {
+	moveIntent := processVoiceCommand(voiceFileName)
+	fmt.Println(moveIntent)
+	return processIntentResponse(moveIntent)
 }
 
 func processIntentResponse(intentResponse *lexruntimeservice.PostContentOutput) *MoveRequest {

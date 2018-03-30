@@ -36,7 +36,7 @@ func CaptureAudio(recording *bool) {
 
 	inputChannels := 1
 	outputChannels := 0
-	sampleRate := 44100
+	sampleRate := 16000
 	framesPerBuffer := make([]float32, 64)
 
 	portaudio.Initialize()
@@ -47,7 +47,7 @@ func CaptureAudio(recording *bool) {
 		Out:           waveFile,
 		Channel:       inputChannels,
 		SampleRate:    sampleRate,
-		BitsPerSample: 8,
+		BitsPerSample: 16,
 	}
 
 	waveWriter, err := wave.NewWriter(param)
@@ -60,20 +60,20 @@ func CaptureAudio(recording *bool) {
 	for {
 		stream.Read()
 
-		wavBuffer := make([]byte, len(framesPerBuffer))
+		wavBuffer := make([]uint16, len(framesPerBuffer))
 		for i, num := range framesPerBuffer {
-			val := num
-			if val < -1.0 {
-				val = -1.0
+			val := (num + 1.0) / 2.0 * 65536.0
+			if val < 0.0 {
+				val = 0.0
 			}
-			if val > 1.0 {
-				val = 1.0
+			if val > 65535.0 {
+				val = 65535.0
 			}
-			var valInt = byte(((val + 1.0) * 127))
+			var valInt = uint16(val+0.5) - 32768
 			wavBuffer[i] = valInt
 		}
 
-		_, err := waveWriter.Write([]byte(wavBuffer))
+		_, err := waveWriter.WriteSample16([]uint16(wavBuffer))
 
 		if err != nil {
 			panic(err)
