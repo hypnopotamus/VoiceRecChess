@@ -10,3 +10,7 @@ func (pawn Pawn) IsMoveValid(newPosition Position) bool {
 
 	return (horizontalDelta == 0 && ((pawn.HasMoved && verticalDelta == 2) || verticalDelta == 1)) || (newPosition.isOccupied() && horizontalDelta == 1 && verticalDelta == 1)
 }
+
+func (pawn Pawn) GetPieceType() string {
+	return "pawn"
+}

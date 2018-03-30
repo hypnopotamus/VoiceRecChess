@@ -10,3 +10,7 @@ func (queen Queen) IsMoveValid(newPosition Position) bool {
 
 	return bishop.IsMoveValid(newPosition) || rook.IsMoveValid(newPosition)
 }
+
+func (queen Queen) GetPieceType() string {
+	return "queen"
+}

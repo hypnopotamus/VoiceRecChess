@@ -9,3 +9,7 @@ func (bishop Bishop) IsMoveValid(newPosition Position) bool {
 
 	return horizontalDelta == verticalDelta
 }
+
+func (bishop Bishop) GetPieceType() string {
+	return "bishop"
+}

@@ -2,7 +2,6 @@ package game
 
 import (
 	"pieces"
-	"reflect"
 )
 
 type Board struct {
@@ -19,25 +18,27 @@ func InitializeBoard() Board {
 			space.Horizontal = rowIndex
 			space.Vertical = columnIndex
 			space.Color = pieces.ToColor(rowIndex + columnIndex)
+
+			board.Spaces[rowIndex][columnIndex] = space
 		}
 	}
 
-	board.initialize(board.BlackPieces, board.Spaces[0], board.Spaces[1], pieces.Black)
-	board.initialize(board.WhitePieces, board.Spaces[7], board.Spaces[6], pieces.White)
-	swapKingAndQueenPosition(board.BlackPieces)
+	board.BlackPieces = board.initialize(board.BlackPieces, board.Spaces[0], board.Spaces[1], pieces.Black)
+	board.WhitePieces = board.initialize(board.WhitePieces, board.Spaces[7], board.Spaces[6], pieces.White)
+	//swapKingAndQueenPosition(board.BlackPieces)
 
 	return board
 }
 
-func (board Board) initialize(piecesArray [16]pieces.Movable, notPawnRow [8]pieces.Position, pawnRow [8]pieces.Position, color pieces.Color) {
+func (board Board) initialize(piecesArray [16]pieces.Movable, notPawnRow [8]pieces.Position, pawnRow [8]pieces.Position, color pieces.Color) [16]pieces.Movable {
 	var pieceIndex = 0
 
 	for _, space := range pawnRow {
 		var pawn pieces.Pawn
 
 		pawn.SetColor(color)
-		space.SetOccupant(pawn.Piece.Movable)
-		piecesArray[pieceIndex] = pawn.Piece
+		space.SetOccupant(pawn)
+		piecesArray[pieceIndex] = pawn
 
 		pieceIndex++
 	}
@@ -52,30 +53,30 @@ func (board Board) initialize(piecesArray [16]pieces.Movable, notPawnRow [8]piec
 		pieceIndex++
 	}
 
-	return
+	return piecesArray
 }
 
 func makePieceForSpace(index int) pieces.Movable {
 	var piece pieces.Movable
 
 	if index == 0 || index == 7 {
-		piece = new(pieces.Rook)
+		piece = *new(pieces.Rook)
 	}
 
 	if index == 1 || index == 6 {
-		piece = new(pieces.Knight)
+		piece = *new(pieces.Knight)
 	}
 
 	if index == 2 || index == 5 {
-		piece = new(pieces.Bishop)
+		piece = *new(pieces.Bishop)
 	}
 
 	if index == 3 {
-		piece = new(pieces.Queen)
+		piece = *new(pieces.Queen)
 	}
 
 	if index == 4 {
-		piece = new(pieces.King)
+		piece = *new(pieces.King)
 	}
 
 	return piece
@@ -86,17 +87,17 @@ func swapKingAndQueenPosition(pieceArray [16]pieces.Movable) {
 	var queen pieces.Movable
 
 	for _, piece := range pieceArray {
-		t := reflect.TypeOf(piece)
-		if reflect.TypeOf(pieces.King{}) == t {
+		if piece.PieceType() == "king" {
 			king = piece
 		}
-		if reflect.TypeOf(pieces.King{}) == t {
+		if piece.PieceType() == "queen" {
 			queen = piece
 		}
 	}
 
 	var kingLocation = king.CurrentPosition()
-	king.InitializePlacement(queen.CurrentPosition())
+	var queenLocation = queen.CurrentPosition()
+	king.InitializePlacement(queenLocation)
 	queen.InitializePlacement(kingLocation)
 
 	return

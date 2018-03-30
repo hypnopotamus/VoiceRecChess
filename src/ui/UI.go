@@ -14,6 +14,8 @@ type UI struct {
 func (ui UI) Render() {
 	var pieceIn, columnIn, rowIn *walk.TextEdit
 	var pieceOut, columnOut, rowOut *walk.TextEdit
+	ui.board = game.InitializeBoard()
+	board := Board{gameBoard: ui.board}
 
 	MainWindow{
 		Title:   "Chess",
@@ -22,7 +24,7 @@ func (ui UI) Render() {
 		Children: []Widget{
 			HSplitter{
 				Children: []Widget{
-					TextEdit{Text: "the board should go here", ReadOnly: true},
+					board.Render(),
 					VSplitter{
 						Children: []Widget{
 							VSplitter{

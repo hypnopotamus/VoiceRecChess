@@ -9,3 +9,7 @@ func (knight Knight) IsMoveValid(newPosition Position) bool {
 
 	return (horizontalDelta == 2 || verticalDelta == 2) && (horizontalDelta == 1 || verticalDelta == 1)
 }
+
+func (knight Knight) GetPieceType() string {
+	return "knight"
+}
