@@ -4,18 +4,30 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"time"
 
 	"github.com/gordonklaus/portaudio"
 	"github.com/zenwerk/go-wave"
 )
 
 func main() {
-	fmt.Println("Recording to test.wav -- Ctrl+C to stop recording")
+	recording := true
+	fmt.Println("starting test recording...")
+	go CaptureAudio(&recording)
+	time.Sleep(time.Duration(5) * time.Second)
+	fmt.Println("stopping test recording...")
+	recording = false
+	time.Sleep(time.Duration(100) * time.Millisecond)
+}
 
+/*
+CaptureAudio -- captures audio until the passed in boolean pointer is false
+*/
+func CaptureAudio(recording *bool) {
 	sig := make(chan os.Signal, 1)
 	signal.Notify(sig, os.Interrupt, os.Kill)
 
-	fileName := "test.wav"
+	fileName := "temp.wav"
 
 	waveFile, err := os.Create(fileName)
 	if err != nil {
@@ -67,14 +79,12 @@ func main() {
 			panic(err)
 		}
 
-		select {
-		case <-sig:
+		if !(*recording) {
 			stream.Stop()
 			waveWriter.Close()
 			stream.Close()
 			portaudio.Terminate()
-			os.Exit(0)
-		default:
+			return
 		}
 	}
 }
